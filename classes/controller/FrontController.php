@@ -2108,15 +2108,15 @@ class FrontControllerCore extends Controller
         $alternativeLangs = [];
         $languages = Language::getLanguages(true, $this->context->shop->id);
 
-        if (count($languages) < 2) {
-            // No need to display alternative lang if there is only one enabled
-            return $alternativeLangs;
-        }
-
         foreach ($languages as $lang) {
             $langUrl = $this->context->link->getLanguageLink($lang['id_lang']);
             $alternativeLangs[$lang['language_code']] = $this->sanitizeUrl($langUrl);
         }
+
+        // setting default language link for x-default value
+        $defaultIdLang = Configuration::get('PS_LANG_DEFAULT');
+        $langUrl = $this->context->link->getLanguageLink($defaultIdLang);
+        $alternativeLangs['x-default'] = $this->sanitizeUrl($langUrl);
 
         return $alternativeLangs;
     }
